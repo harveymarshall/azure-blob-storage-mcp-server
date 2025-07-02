@@ -9,6 +9,7 @@ CREDENTIAL = DefaultAzureCredential()
 # Create an MCP server
 mcp = FastMCP("Azure-Blob-Storage-MCP-Server")
 
+CONTAINERS_ACCOUNTS = []
 
 # Add an addition tool
 @mcp.tool(title="Create Azure Blob Container")
@@ -34,8 +35,14 @@ def list_containers(account_name: str) -> list:
     containers_list = []
     for container in containers:
         containers_list.append(container["name"])
+        CONTAINERS_ACCOUNTS.append({"account": account_name, "container": container['name']})
     return containers_list
 
+@mcp.resource("containers://latest/{{account_name}}")
+def containers_latest():
+    if CONTAINERS_ACCOUNTS == {}:
+        return "No recent container names or accounts to show"
+    return CONTAINERS_ACCOUNTS
 
 
 # Add a dynamic greeting resource

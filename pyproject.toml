@@ -1,11 +1,39 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
 [project]
 name = "azure-blob-storage-mcp-server"
 version = "0.1.0"
 description = "An MCP Server to interact with Azure Blob Storage Clients and Resources"
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.9"
+authors = [
+    {name = "Harvey Marshall", email = "your-email@example.com"}
+]
+license = {text = "MIT"}
+keywords = ["mcp", "azure", "blob-storage", "server"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+]
 dependencies = [
     "azure-identity>=1.23.0",
     "azure-storage-blob>=12.25.1",
-    "mcp[cli]>=1.10.1",
+    "mcp>=1.10.1",
 ]
+
+[project.urls]
+Homepage = "https://github.com/harveymarshall/azure-blob-storage-mcp-server"
+Repository = "https://github.com/harveymarshall/azure-blob-storage-mcp-server"
+Issues = "https://github.com/harveymarshall/azure-blob-storage-mcp-server/issues"
+
+[project.scripts]
+azure-blob-storage-mcp-server = "server.main:main"
