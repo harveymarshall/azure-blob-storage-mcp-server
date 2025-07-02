@@ -11,7 +11,10 @@ mcp = FastMCP("Azure-Blob-Storage-MCP-Server")
 
 CONTAINERS_ACCOUNTS = []
 
-# Add an addition tool
+def client(account_name: str, credential: DefaultAzureCredential=CREDENTIAL) -> BlobServiceClient:
+    blob_service_client = BlobServiceClient(f"https://{account_name}.blob.core.windows.net", credential)
+    return blob_service_client
+
 @mcp.tool(title="Create Azure Blob Container")
 def create_container(account_name: str, container_name: str):
     """Create a BlobServiceClient instance and create a new
@@ -24,14 +27,14 @@ def create_container(account_name: str, container_name: str):
     Returns:
         _type_: _description_
     """
-    blob_service_client = BlobServiceClient(f"https://{account_name}.blob.core.windows.net", credential=CREDENTIAL)
-    create = blob_service_client.create_container(container_name)
+    client = client(account_name)
+    create = client.create_container(container_name)
     return create
 
 @mcp.tool(title="List Azure Blob Containers")
 def list_containers(account_name: str) -> list:
-    blob_service_client = BlobServiceClient(f"https://{account_name}.blob.core.windows.net", credential=CREDENTIAL)
-    containers = blob_service_client.list_containers()
+    client = client(account_name)
+    containers = client.list_containers()
     CONTAINERS_ACCOUNTS.clear()
     containers_list = []
     for container in containers:
@@ -63,8 +66,8 @@ def list_blobs(account_name: str, container_name: str) -> list:
     Returns:
         list: list of blobs within the container
     """
-    blob_service_client = BlobServiceClient(f"https://{account_name}.blob.core.windows.net", credential=CREDENTIAL)
-    container_client = blob_service_client.get_container_client(container_name)
+    client = client(account_name)
+    container_client = client.get_container_client(container_name)
     blob_list = [blob.name for blob in container_client.list_blobs()]
     return blob_list
 
@@ -82,8 +85,8 @@ def download_blobs(account_name: str, container_name: str, blobs: list, destinat
     """
     import os
     results = []
-    blob_service_client = BlobServiceClient(f"https://{account_name}.blob.core.windows.net", credential=CREDENTIAL)
-    container_client = blob_service_client.get_container_client(container_name)
+    client = client(account_name)
+    container_client = client.get_container_client(container_name)
     os.makedirs(destination_folder, exist_ok=True)
     for blob_name in blobs:
         try:
@@ -110,8 +113,8 @@ def summarize_blob(account_name: str, container_name: str, blob_name: str) -> st
     Returns:
         str: A summary (first 500 characters) of the blob's contents
     """
-    blob_service_client = BlobServiceClient(f"https://{account_name}.blob.core.windows.net", credential=CREDENTIAL)
-    container_client = blob_service_client.get_container_client(container_name)
+    client = client(account_name)
+    container_client = client.get_container_client(container_name)
     blob_client = container_client.get_blob_client(blob_name)
     blob_data = blob_client.download_blob().readall()
     try:

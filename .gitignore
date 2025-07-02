@@ -5,3 +5,6 @@ uv.lock
 __pycache__/
 **/__pycache__/
 
+# macOS
+.DS_Store
+
