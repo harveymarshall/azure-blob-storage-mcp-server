@@ -4,6 +4,7 @@
 uv.lock
 __pycache__/
 **/__pycache__/
+.pytest_cache
 
 # macOS
 .DS_Store

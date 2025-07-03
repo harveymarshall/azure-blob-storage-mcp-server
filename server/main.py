@@ -27,14 +27,14 @@ def create_container(account_name: str, container_name: str):
     Returns:
         _type_: _description_
     """
-    client = client(account_name)
-    create = client.create_container(container_name)
+    blob_client = client(account_name)
+    create = blob_client.create_container(container_name)
     return create
 
 @mcp.tool(title="List Azure Blob Containers")
 def list_containers(account_name: str) -> list:
-    client = client(account_name)
-    containers = client.list_containers()
+    blob_client = client(account_name)
+    containers = blob_client.list_containers()
     CONTAINERS_ACCOUNTS.clear()
     containers_list = []
     for container in containers:
@@ -43,15 +43,15 @@ def list_containers(account_name: str) -> list:
     return containers_list
 
 @mcp.resource("containers://latest")
-def containers_latest() -> list:
+def containers_latest(latest: list=CONTAINERS_ACCOUNTS) -> list:
     """_summary_
 
     Returns:
         list: list of objects showing the containers and the account they are associated with
     """
-    if CONTAINERS_ACCOUNTS == {}:
+    if latest == []:
         return "No recent container names or accounts to show"
-    return CONTAINERS_ACCOUNTS
+    return latest
 
 
 # Add a dynamic greeting resource
@@ -66,8 +66,8 @@ def list_blobs(account_name: str, container_name: str) -> list:
     Returns:
         list: list of blobs within the container
     """
-    client = client(account_name)
-    container_client = client.get_container_client(container_name)
+    blob_client = client(account_name)
+    container_client = blob_client.get_container_client(container_name)
     blob_list = [blob.name for blob in container_client.list_blobs()]
     return blob_list
 
@@ -85,8 +85,8 @@ def download_blobs(account_name: str, container_name: str, blobs: list, destinat
     """
     import os
     results = []
-    client = client(account_name)
-    container_client = client.get_container_client(container_name)
+    blob_client = client(account_name)
+    container_client = blob_client.get_container_client(container_name)
     os.makedirs(destination_folder, exist_ok=True)
     for blob_name in blobs:
         try:
@@ -113,8 +113,8 @@ def summarize_blob(account_name: str, container_name: str, blob_name: str) -> st
     Returns:
         str: A summary (first 500 characters) of the blob's contents
     """
-    client = client(account_name)
-    container_client = client.get_container_client(container_name)
+    blob_client = client(account_name)
+    container_client = blob_client.get_container_client(container_name)
     blob_client = container_client.get_blob_client(blob_name)
     blob_data = blob_client.download_blob().readall()
     try:
