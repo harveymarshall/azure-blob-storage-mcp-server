@@ -7,39 +7,35 @@ This project provides an MCP server for interacting with Azure Blob Storage usin
 ### 1. Clone the Repository
 
 ```bash
-uv clone https://github.com/your-username/azure-blob-storage-mcp-server.git
+git clone https://github.com/your-username/azure-blob-storage-mcp-server.git
 cd azure-blob-storage-mcp-server
 ```
 
-### 2. Set Up Python Environment
+### 2. Go to you AI Agent
 
-It's recommended to use a virtual environment. With uv, you can create and activate it as follows:
+- Add this to the settings in your AI Agent
 
-```bash
-uv init
-source .venv/bin/activate
+```json
+"Azure-Blob-Storage-MCP-Server": {
+    "command": "uv",
+    "args": [
+      "run",
+      "--with",
+      "mcp[cli]",
+      "--with",
+      "azure-storage-blob",
+      "--with",
+      "azure-identity",
+      "mcp",
+      "run",
+      "{path/to/where/you/cloned/the/repository}azure-blob-storage-mcp-server/server/main.py"
+    ]
+  }
 ```
-
-### 3. Install Dependencies
-
-```bash
-uv pip install -r pyproject.toml
-```
-
-### 4. Authenticate with Azure
-
-Make sure you are authenticated with Azure so the MCP server can access your Blob Storage:
-
-```bash
-az login
-```
-
-### 5. Start the MCP Server
-
-## Connecting to Claude Desktop
 
 ## Notes
 
-- Ensure your Azure credentials are valid and have access to the target storage account.
+- Ensure your Azure credentials are valid and have access to the target storage account. (run az login from your terminal)
+- Ensure you have read/write access for the storage accounts / containers / blobs you are accessing
 - You may need to adjust firewall or network settings if connecting from another device.
 - For more information on MCP protocol or Claude Desktop, refer to their respective documentation.
